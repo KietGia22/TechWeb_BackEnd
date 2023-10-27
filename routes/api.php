@@ -34,7 +34,7 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/userProfile', [AuthController::class, 'userProfile']);
     Route::post('/changePassword', [AuthController::class, 'changePassWord']);
-    Route::middleware(['checkAdmin'])->group(function(){
+    Route::middleware('checkAdmin')->group(function(){
         Route::get('/userAdmin', [AuthController::class, 'isAdmin']);
     });
 

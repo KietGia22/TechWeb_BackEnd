@@ -156,10 +156,10 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
+                PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider::class,
         /*
          * Package Service Providers...
          */
-
         /*
          * Application Service Providers...
          */

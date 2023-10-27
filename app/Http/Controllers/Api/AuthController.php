@@ -20,12 +20,12 @@ class AuthController extends Controller
 
     public function login(Request $req){
        $req->validate([
-        'email' => 'required|string|email',
+        'phone' => 'required|regex:/^[0-9]{10}$/',
         'password' => 'required|string|min:6',
        ]);
 
        $credentials = [
-            'email' => $req->email,
+            'phone' => $req->phone,
             'password' => $req->password
         ];
 

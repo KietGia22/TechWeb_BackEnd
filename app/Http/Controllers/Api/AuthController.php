@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -102,6 +103,37 @@ class AuthController extends Controller
             'access_token' => Auth::refresh(),
             'data' => Auth::user()
         ]);
+    }
+
+    public function isAdmin()
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => Auth::user()
+        ]);
+    }
+
+    public function changePassWord(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string|min:6',
+            'new_password' => 'required|string|confirmed|min:6',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'Passwords do not match',
+            ], 400);
+        }
+        $userId = Auth::user()->user_id;
+
+        $user = User::where('user_id', $userId)->update(
+                    ['password' => bcrypt($request->new_password)]
+                );
+
+        return response()->json([
+            'message' => 'User successfully changed password',
+            'user' => $user,
+        ], 201);
     }
 
 }

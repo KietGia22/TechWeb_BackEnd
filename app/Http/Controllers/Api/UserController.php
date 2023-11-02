@@ -3,50 +3,78 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function register(Request $req){
-        $validator = Validator::make($req -> all(),[
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user,email',
-            'phone' => 'required|string',
-            'password' => 'required|string|min:6',
+    //
+    public function index()
+    {
+        $user = User::all();
+        return response()->json([
+            'status' => 200,
+            'data' => $user,
         ]);
-
-        if($validator -> fails()){
-            return response () -> json([
-                'message' => 'Validations fails',
-                'error' => $validator -> errors(),
-                'status' => 422
-            ],422);
-        }
-        $user = User::create([
-            'name' => $req['name'],
-            'email' => $req['email'],
-            'phone' => $req['phone'],
-            'password' => Hash::make($req['password']),
-            'role_id' => $req['role_id'], 
-            'user_id' => $req['user_id']
-        ]);
-        return response () -> json([
-            'message' => 'Registration successful',
-            'data' => $user 
-        ],200);
     }
 
-    public function login(Request $req){
-        $user = User::where('phone', $req->phone) -> first();
-        if(!$user ||  !Hash::check($req->password,$user->password)){
-            return response([
-                'error' => 'phone number or password is not matched',
-                'status' => 401
-            ],401);
+   public function update(Request $request, $id)
+    {
+        if (!$this->userHasPermissionToUpdate($id)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Unauthorized to update this user'
+            ], 403); // 403 Forbidden
         }
-        return $user;
+
+        try {
+            $user = User::where('user_id', '=', $id)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'User not found'
+                ], 404); // 404 Not Found
+            }
+
+            $user->update($request->all());
+
+            return response([
+                'status' => 'success',
+                'message' => 'User updated successfully',
+                'data' => $user,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => $th->getMessage()
+            ], 500); // 500 Internal Server Error
+        }
+    }
+
+    protected function userHasPermissionToUpdate($id)
+    {
+        $currentUser = auth()->user();
+
+        if ($currentUser->user_id == $id) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public function destroy($id)
+    {
+        $user = User::where('user_id', '=', $id)->first();
+        if($user == null)
+        {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'successfully deleted the user'
+        ], 200);
     }
 }

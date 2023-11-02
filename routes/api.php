@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\UserController as ApiUserController;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\ImageController;
+use App\Http\Requests\PostStoreRequest;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,9 +27,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-// Route::post('/auth/register',[UserController::class, 'register']);
-// Route::post('/auth/login', [UserController::class,'login']);
 
+Route::post('postImage',[ImageController::class,'store']);
+Route::get('/images/{product_id}',[ImageController::class,'getImagesByProductId']);
 Route::group([
     'middleware'=> ['api', 'cors'],
     'prefix' => 'auth'

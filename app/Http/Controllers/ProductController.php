@@ -16,7 +16,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 200,
             'data' => $productlist,
-        ]);
+        ])->withHeaders(['X-Total-Count' => $productlist->count()]);
     }
 
     public function showById(Request $request, $id){

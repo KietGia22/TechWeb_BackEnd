@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,6 @@ class AuthController extends Controller
 
     public function register(Request $req){
          $validator = Validator::make($req -> all(),[
-            'user_id'=> 'required|string',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user,email',
             'phone' => 'required|string',
@@ -63,13 +63,19 @@ class AuthController extends Controller
             ],422);
         }
 
+        $now = Carbon::now();
+        $now->setTimezone('Asia/Bangkok');
+
+        $randomId = 'User'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
+
         $user = User::create([
-            'user_id' => $req->user_id,
+            'user_id' => $randomId,
             'name' => $req->name,
             'email' => $req->email,
             'phone' => $req->phone,
             'password' => Hash::make($req->password),
-            'role' => $req->role
+            'role' => $req->role,
+            'create_at' => $now
         ]);
 
         return response()->json([

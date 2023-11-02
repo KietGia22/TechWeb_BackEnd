@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\Api\UserController as ApiUserController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +39,7 @@ Route::group([
     Route::put('/update/{id}', [UserController::class, 'update']);
     Route::middleware('checkAdmin')->group(function(){
         Route::get('/userAdmin', [AuthController::class, 'isAdmin']);
-        Route::get('/index', [UserController::class, 'index']);
+        Route::get('/index', [ApiUserController::class, 'index']);
         Route::delete('/delete/{id}', [UserController::class, 'destroy']);
     });
 });
@@ -46,7 +48,7 @@ Route::group([
     'middleware' => ['api', 'cors'],
     'prefix' => 'product'
 ], function(){
-    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/', [ApiProductController::class, 'index']);
     Route::get('/{id}', [ProductController::class, 'showById']);
     Route::get('/name/{id}', [ProductController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){

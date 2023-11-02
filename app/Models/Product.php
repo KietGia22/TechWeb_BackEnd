@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -27,8 +28,14 @@ class Product extends Model
     ];
 
     protected $hidden = [
-        'img_id',
         'supplier_id',
         'updated_at',
+        'pivot'
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id');
+    }
+
 }

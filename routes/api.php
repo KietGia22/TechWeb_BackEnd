@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
-use App\Http\Controllers\ProductController;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -44,15 +45,32 @@ Route::group([
     });
 });
 
+//Product
 Route::group([
     'middleware' => ['api', 'cors'],
     'prefix' => 'product'
 ], function(){
     Route::get('/', [ApiProductController::class, 'index']);
-    Route::get('/{id}', [ProductController::class, 'showById']);
-    Route::get('/name/{id}', [ProductController::class, 'showByName']);
+    Route::get('/{id}', [ApiProductController::class, 'showById']);
+    Route::get('/name/{id}', [ApiProductController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){
-        Route::put('/update/{id}', [ProductController::class, 'update']);
-        Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
+        Route::put('/update/{id}', [ApiProductController::class, 'update']);
+        Route::delete('/delete/{id}', [ApiProductController::class, 'destroy']);
     });
+});
+
+//Category
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'category'
+], function(){
+    Route::get('/', [CategoryController::class, 'index']);
+});
+
+//Suppliers
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'supplier'
+], function(){
+    Route::get('/', [SupplierController::class, 'index']);
 });

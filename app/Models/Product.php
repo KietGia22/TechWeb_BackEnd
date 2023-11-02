@@ -25,11 +25,11 @@ class Product extends Model
         'detail',
         'price',
         'quantity_pr',
-        'guarantee period'
+        'guarantee_period',
+        'supplier_id',
     ];
 
     protected $hidden = [
-        'supplier_id',
         'updated_at',
         'pivot'
     ];

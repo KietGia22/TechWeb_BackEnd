@@ -54,6 +54,7 @@ Route::group([
     Route::get('/{id}', [ApiProductController::class, 'showById']);
     Route::get('/name/{id}', [ApiProductController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){
+        Route::post('/createProduct', [ApiProductController::class, 'create'] );
         Route::put('/update/{id}', [ApiProductController::class, 'update']);
         Route::delete('/delete/{id}', [ApiProductController::class, 'destroy']);
     });
@@ -65,6 +66,12 @@ Route::group([
     'prefix' => 'category'
 ], function(){
     Route::get('/', [CategoryController::class, 'index']);
+    Route::get('/{id}', [CategoryController::class, 'showByName']);
+    Route::middleware('checkAdmin')->group(function(){
+        Route::post('/create', [CategoryController::class, 'create']);
+        Route::put('/update/{id}', [CategoryController::class, 'update']);
+        Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
+    });
 });
 
 //Suppliers
@@ -73,4 +80,10 @@ Route::group([
     'prefix' => 'supplier'
 ], function(){
     Route::get('/', [SupplierController::class, 'index']);
+    Route::get('/{id}', [SupplierController::class, 'showByName']);
+    Route::middleware('checkAdmin')->group(function(){
+        Route::post('/create', [SupplierController::class, 'create']);
+        Route::put('/update/{id}', [SupplierController::class, 'update']);
+        Route::delete('/delete/{id}', [SupplierController::class, 'destroy']);
+    });
 });

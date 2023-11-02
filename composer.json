@@ -13,7 +13,8 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "php-open-source-saver/jwt-auth": "*"
+        "php-open-source-saver/jwt-auth": "*",
+        "zircote/swagger-php": "2.0.13"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

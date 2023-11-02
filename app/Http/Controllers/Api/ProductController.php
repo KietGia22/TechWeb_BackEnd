@@ -1,22 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     //
+     //
     public function index(Request $request){
 
         $perPage = $request->input('per_page', 10);
-        $productlist = Product::paginate($perPage);
+        $productlist = Product::with('categories')->paginate($perPage);
 
         return response()->json([
             'status' => 200,
             'data' => $productlist,
-        ])->withHeaders(['X-Total-Count' => $productlist->count()]);
+        ])->withHeaders(['X-Total-Count' => $productlist->total()]);
     }
 
     public function showById(Request $request, $id){

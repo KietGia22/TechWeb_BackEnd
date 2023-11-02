@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::post('/auth/login', [UserController::class,'login']);
 
 Route::group([
-    'middleware'=> 'api',
+    'middleware'=> ['api', 'cors'],
     'prefix' => 'auth'
 ], function(){
     Route::post('/login', [AuthController::class, 'login']);
@@ -43,7 +43,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'cors'],
     'prefix' => 'product'
 ], function(){
     Route::get('/', [ProductController::class, 'index']);

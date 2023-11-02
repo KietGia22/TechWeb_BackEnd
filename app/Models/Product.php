@@ -14,12 +14,12 @@ class Product extends Model
 
     public $timestamps = false;
 
+     public $incrementing = false;
+
     protected $fillable = [
         'product_id',
         'name_pr',
         'name_serial',
-        'ram',
-        'rom',
         'detail',
         'price',
         'quantity_pr',

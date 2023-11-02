@@ -22,7 +22,7 @@ class ProductController extends Controller
     }
 
     public function showById(Request $request, $id){
-        $product = Product::where('product_id', '=', $id)->first();
+        $product = Product::where('product_id', '=', $id)->with('categories')->first();
         try {
                 return response()->json([
                     'status' => 200,
@@ -37,7 +37,7 @@ class ProductController extends Controller
     }
 
     public function showByName(Request $request, $id){
-        $product = Product::where('name_pr', 'LIKE', '%' . $id . '%')->get();
+        $product = Product::where('name_pr', 'LIKE', '%' . $id . '%')->with('categories')->get();
         try {
                 return response()->json([
                     'status' => 200,
@@ -53,7 +53,7 @@ class ProductController extends Controller
 
     public function update(Request $request, $id) {
         try {
-            $product = Product::where('product_id', '=', $id)->first();
+            $product = Product::where('product_id', '=', $id)->with('categories')->first();
 
             if (!$product) {
                 return response()->json([
@@ -78,7 +78,7 @@ class ProductController extends Controller
     }
 
     public function destroy(Request $request, $id){
-        $product = Product::where('product_id', '=', $id)->first();
+        $product = Product::where('product_id', '=', $id)->with('categories')->first();
         $product->delete();
         return response()->json([
             'status' => 'success',
@@ -86,7 +86,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function getProductByCategory(Request $request, $id){
+    public function create(Request $request, $id){
 
     }
 }

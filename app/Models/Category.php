@@ -27,7 +27,7 @@ class Category extends Model
         'pivot'
     ];
 
-    public function productShip():BelongsToMany
+    public function products():BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_category', 'category_id', 'product_id');
     }

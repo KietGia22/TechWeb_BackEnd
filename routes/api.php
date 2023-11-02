@@ -79,9 +79,9 @@ Route::group([
     'middleware' => ['api', 'cors'],
     'prefix' => 'supplier'
 ], function(){
-    Route::get('/', [SupplierController::class, 'index']);
-    Route::get('/{id}', [SupplierController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){
+        Route::get('/', [SupplierController::class, 'index']);
+        Route::get('/{id}', [SupplierController::class, 'showByName']);
         Route::post('/create', [SupplierController::class, 'create']);
         Route::put('/update/{id}', [SupplierController::class, 'update']);
         Route::delete('/delete/{id}', [SupplierController::class, 'destroy']);

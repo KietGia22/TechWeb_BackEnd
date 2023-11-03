@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
-use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;

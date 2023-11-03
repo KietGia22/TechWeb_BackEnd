@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function index(Request $request){
 
         $perPage = $request->input('per_page', 10);
-        $catelist = Category::with('products')->paginate($perPage);
+        $catelist = Category::paginate($perPage);
 
         return response()->json([
             'status' => 200,

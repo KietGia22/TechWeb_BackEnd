@@ -1,13 +1,13 @@
 <?php
- 
+
 namespace App\Http\Controllers;
- 
+
 use Illuminate\Http\Request;
 use App\Models\Image;
 use App\Http\Requests\PostStoreRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
- 
+
 class ImageController extends Controller
 {
     public function store(Request $request)
@@ -15,13 +15,16 @@ class ImageController extends Controller
         try {
             $timestamp = time();
             $imageName = $timestamp.Str::random(32).".".$request->image_path->getClientOriginalExtension();
+
+            $randomId = 'IMG'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
+
             Image::create([
-                'img_id' => $request->img_id,
+                'img_id' => $randomId,
                 'product_id' => $request->product_id,
                 'image_path' => $imageName
             ]);
-     
-            Storage::disk('public')->put($imageName, file_get_contents($request->image_path));  
+
+            Storage::disk('public')->put($imageName, file_get_contents($request->image_path));
             return response()->json([
                 'message' => "Post successfully created.",
                 'status' => 200

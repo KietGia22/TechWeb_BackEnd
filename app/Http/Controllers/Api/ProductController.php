@@ -7,8 +7,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Product_Category;
 use App\Models\Supplier;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -23,6 +26,111 @@ class ProductController extends Controller
             'status' => 200,
             'data' => $productlist,
         ])->withHeaders(['X-Total-Count' => $productlist->total()]);
+    }
+    
+
+    public function getProduct(Request $request)
+    {
+        $productList = Product::with('categories','suppliers', 'image');
+    
+        // Filter by minimum price
+        if ($request->filled('minPrice')) {
+            $productList->where('price', '>=', $request->input('minPrice'));
+        }
+    
+        // Filter by search key
+        if ($request->filled('searchKey')) {
+            $productList->where(function ($query) use ($request) {
+                $query->whereRaw('LOWER(name_pr) LIKE ?', ['%' . strtolower($request->input('searchKey')) . '%'])
+                    ->orWhereRaw('LOWER(name_serial) LIKE ?', ['%' . strtolower($request->input('searchKey')) . '%']);
+            });
+        }
+    
+        // Filter by maximum price
+        if ($request->filled('maxPrice')) {
+            $productList->where('price', '<=', $request->input('maxPrice'));
+        }
+    
+        // Filter by supplier name
+        if ($request->filled('supplierId')) {
+            $productList->whereHas('suppliers', function ($query) use ($request) {
+                $query->where('supplier_id', $request->input('supplierId'));
+            });
+        }
+    
+        // Filter by category
+        if ($request->filled('categoryId')) {
+            $productList->whereHas('categories', function ($query) use ($request) {
+                $query->where('category_id', $request->input('categoryId'));
+            });
+        }
+        
+        // Sort by name or price
+        if ($request->filled('sortBy')) {
+            $sortField = $request->input('sortBy');
+            $isDescending = $request->filled('isDescending') && $request->input('isDescending') === 'true';
+    
+            $productList->orderBy($sortField, $isDescending ? 'desc' : 'asc');
+        }
+    
+        // Pagination
+        $pageNumber = $request->input('pageNumber', 1);
+        $pageSize = $request->input('pageSize', 10);
+    
+        $pagedProductList = $productList->skip(($pageNumber - 1) * $pageSize)
+                                        ->take($pageSize)
+                                        ->get();
+    
+        $totalProductCount = $productList->count();
+        $totalPages = (int)ceil($totalProductCount / $pageSize);
+    
+        $response = [
+            'Products' => $pagedProductList,
+            'PageNumber' => $pageNumber,
+            'PageSize' => $pageSize,
+            'TotalPages' => $totalPages,
+            'TotalProducts' => $totalProductCount,
+            'sortBy' => $request->sortBy
+        ];
+    
+        return response()->json($response);
+    }
+
+    public function addImageToProduct(Request $request)
+    {
+        try {
+            $timestamp = time();
+            $imageName = $timestamp.Str::random(32).".".$request->image_path->getClientOriginalExtension();
+
+            $randomId = 'IMG'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
+
+            Image::create([
+                'img_id' => $randomId,
+                'product_id' => $request->product_id,
+                'image_path' => $imageName
+            ]);
+
+            Storage::disk('public')->put($imageName, file_get_contents($request->image_path));
+            return response()->json([
+                'message' => "Post successfully created.",
+                'status' => 200
+            ],200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => "Something went really wrong!",
+                'status' => 500
+            ],500);
+        }
+    }
+    public function getImagesByProductId($product_id){
+        $images = Image::where('product_id',$product_id)->get();
+        if ($images->isEmpty()) {
+            return response()->json([
+                'message' => 'no images found',
+                'status' => 404
+            ],404);
+        }
+        return response()->json($images);
     }
 
     public function showById(Request $request, $id){

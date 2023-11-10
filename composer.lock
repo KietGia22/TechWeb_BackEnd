@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ac192eb91201d6343b4ca2fe0c79a78",
+    "content-hash": "917f69f68037f90897cbd63b0f88ddc8",
     "packages": [
         {
             "name": "brick/math",
@@ -8362,17 +8362,6 @@
             "time": "2023-10-09T12:55:26+00:00"
         },
         {
-<<<<<<< HEAD
-            "name": "symfony/yaml",
-            "version": "v6.3.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "9758b6c69d179936435d0ffb577c3708d57e38a8"
-            },
-            "dist": {
-                "type": "zip",
-=======
             "name": "spatie/laravel-package-tools",
             "version": "1.16.1",
             "source": {
@@ -8516,7 +8505,6 @@
             },
             "dist": {
                 "type": "zip",
->>>>>>> master
                 "url": "https://api.github.com/repos/symfony/yaml/zipball/9758b6c69d179936435d0ffb577c3708d57e38a8",
                 "reference": "9758b6c69d179936435d0ffb577c3708d57e38a8",
                 "shasum": ""

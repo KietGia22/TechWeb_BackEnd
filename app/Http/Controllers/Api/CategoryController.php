@@ -13,13 +13,8 @@ class CategoryController extends Controller
     //
     public function index(Request $request){
 
-        $perPage = $request->input('per_page', 10);
-        $catelist = Category::paginate($perPage);
-
-        return response()->json([
-            'status' => 200,
-            'data' => $catelist,
-        ])->withHeaders(['X-Total-Count' => $catelist->total()]);
+        $categories = Category::all('category_id');
+        return response()->json($categories);
     }
 
     public function showByName(Request $request, $name)

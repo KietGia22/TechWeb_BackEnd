@@ -66,11 +66,11 @@ class ProductController extends Controller
         }
         
         // Sort by name or price
-        if ($request->filled('sortBy')) {
-            $sortField = $request->input('sortBy');
-            $isDescending = $request->filled('isDescending') && $request->input('isDescending') === 'true';
+        if ($request->filled('SortBy')) {
+            $sortField = $request->input('SortBy');
+            $IsDescending = $request->IsDescending;
     
-            $productList->orderBy($sortField, $isDescending ? 'desc' : 'asc');
+            $productList->orderBy($sortField, $IsDescending=="true" ? 'desc' : 'asc');
         }
     
         // Pagination
@@ -90,7 +90,8 @@ class ProductController extends Controller
             'PageSize' => $pageSize,
             'TotalPages' => $totalPages,
             'TotalProducts' => $totalProductCount,
-            'sortBy' => $request->sortBy
+            'sortBy' => $request->SortBy,
+            'IsDesCending' => $request->IsDescending
         ];
     
         return response()->json($response);

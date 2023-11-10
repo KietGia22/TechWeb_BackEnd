@@ -52,7 +52,7 @@ Route::group([
     'prefix' => 'product'
 ], function(){
     Route::get('/', [ApiProductController::class, 'index']);
-    Route::get('/getProduct',[ApiProductController::class,'getProduct']);
+    Route::post('/getProduct',[ApiProductController::class,'getProduct']);
     Route::get('/{id}', [ApiProductController::class, 'showById']);
     Route::post('/addImageToProduct',[ApiProductController::class,'addImageToProduct']);
     Route::get('getImagesByProductId/{id}',[ApiProductController::class,'getImagesByProductId']);

@@ -27,7 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::post('postImage',[ImageController::class,'store']);
 Route::get('/images/{product_id}',[ImageController::class,'getImagesByProductId']);
 Route::group([
     'middleware'=> ['api', 'cors'],
@@ -53,7 +52,10 @@ Route::group([
     'prefix' => 'product'
 ], function(){
     Route::get('/', [ApiProductController::class, 'index']);
+    Route::post('/getProduct',[ApiProductController::class,'getProduct']);
     Route::get('/{id}', [ApiProductController::class, 'showById']);
+    Route::post('/addImageToProduct',[ApiProductController::class,'addImageToProduct']);
+    Route::get('getImagesByProductId/{id}',[ApiProductController::class,'getImagesByProductId']);
     Route::get('/name/{id}', [ApiProductController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){
         Route::post('/createProduct', [ApiProductController::class, 'create'] );

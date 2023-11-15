@@ -61,7 +61,7 @@ class ProductController extends Controller
         // Filter by category
         if ($request->filled('categoryId')) {
             $productList->whereHas('categories', function ($query) use ($request) {
-                $query->where('category_id', $request->input('categoryId'));
+                $query->where('product_category.category_id', $request->input('categoryId'));
             });
         }
         
@@ -101,9 +101,10 @@ class ProductController extends Controller
     {
         try {
             $timestamp = time();
-            $imageName = $timestamp.Str::random(32).".".$request->image_path->getClientOriginalExtension();
+            $count = Image::where('product_id', $request->product_id)->count();
+            $imageName = $request->product_id.'_'.$count.".".$request->image_path->getClientOriginalExtension();
 
-            $randomId = 'IMG'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
+            $randomId = 'IMG'.$timestamp;
 
             Image::create([
                 'img_id' => $randomId,

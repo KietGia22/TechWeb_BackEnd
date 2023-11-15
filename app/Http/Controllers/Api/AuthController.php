@@ -42,7 +42,7 @@ class AuthController extends Controller
             'status' => 'success',
             'access_token' => $token,
             'token_type' => 'bearer',
-            'data' => $user
+            'datas' => $user
         ], 200);
     }
 

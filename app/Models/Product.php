@@ -16,7 +16,7 @@ class Product extends Model
 
     public $timestamps = false;
 
-     public $incrementing = false;
+    public $incrementing = false;
 
     protected $fillable = [
         'product_id',

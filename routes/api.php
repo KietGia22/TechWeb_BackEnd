@@ -85,7 +85,8 @@ Route::group([
 ], function(){
     Route::middleware('checkAdmin')->group(function(){
         Route::get('/', [SupplierController::class, 'index']);
-        Route::get('/{id}', [SupplierController::class, 'showByName']);
+        Route::get('/{name}', [SupplierController::class, 'showByName']);
+        Route::get('/show/{id}', [SupplierController::class, 'showById']);
         Route::post('/create', [SupplierController::class, 'create']);
         Route::put('/update/{id}', [SupplierController::class, 'update']);
         Route::delete('/delete/{id}', [SupplierController::class, 'destroy']);

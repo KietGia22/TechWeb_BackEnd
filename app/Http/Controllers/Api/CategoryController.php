@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
     //
     public function index(Request $request){
-        $categories = Category::all('category_id');
+        $categories = Category::all();
         return response()->json($categories);
     }
 

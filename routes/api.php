@@ -56,7 +56,7 @@ Route::group([
     Route::get('/{id}', [ApiProductController::class, 'showById']);
     Route::post('/addImageToProduct',[ApiProductController::class,'addImageToProduct']);
     Route::get('getImagesByProductId/{id}',[ApiProductController::class,'getImagesByProductId']);
-    Route::get('/name/{id}', [ApiProductController::class, 'showByName']);
+    Route::post('/name', [ApiProductController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){
         Route::post('/createProduct', [ApiProductController::class, 'create'] );
         Route::put('/update/{id}', [ApiProductController::class, 'update']);

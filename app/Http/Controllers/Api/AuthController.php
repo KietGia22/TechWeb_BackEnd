@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -39,15 +40,13 @@ class AuthController extends Controller
         $user = JWTAuth::user();
 
         return response() -> json([
-            'status' => 'success',
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'datas' => $user
-        ], 200);
+            'user' => $user,
+            'token' => $token
+        ],200)->withCookie(cookie('access_token', $token, 60));
     }
 
     public function register(Request $req){
-         $validator = Validator::make($req -> all(),[
+         try {$validator = Validator::make($req -> all(),[
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user,email',
             'phone' => 'required|string',
@@ -78,10 +77,12 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'status' => 'success',
             'message' => 'User created successfully',
             'data' => $user
-        ]);
+        ]);} catch (\Throwable $th) {
+            return response()->json(
+                $th->getMessage(), 404);
+        }
     }
 
     public function logout()

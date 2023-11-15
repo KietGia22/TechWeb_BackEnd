@@ -74,24 +74,27 @@ class ProductController extends Controller
         }
     
         // Pagination
-        $pageNumber = $request->input('pageNumber', 1);
-        $pageSize = $request->input('pageSize', 10);
-    
-        $pagedProductList = $productList->skip(($pageNumber - 1) * $pageSize)
-                                        ->take($pageSize)
-                                        ->get();
-    
-        $totalProductCount = $productList->count();
-        $totalPages = (int)ceil($totalProductCount / $pageSize);
+        $pageNumber = ceil(filled($request->pageNumber) ? $request->pageNumber : 1);
+        $pageSize = ceil(isset($request->pageSize) ? $request->pageSize : 12);
+        
+        // Calculate offset for pagination
+        $offset = ($pageNumber - 1) * $pageSize;
+        
+        // Get paged product list using Eloquent
+        $pagedProductList = Product::skip($offset)->take($pageSize)->get();
+        
+        // Get total product count
+        $totalProductCount = Product::count();
+        
+        // Calculate total pages
+        $totalPages = ceil($totalProductCount / $pageSize);
     
         $response = [
             'Products' => $pagedProductList,
             'PageNumber' => $pageNumber,
             'PageSize' => $pageSize,
             'TotalPages' => $totalPages,
-            'TotalProducts' => $totalProductCount,
-            'sortBy' => $request->SortBy,
-            'IsDesCending' => $request->IsDescending
+            'TotalProducts' => $totalProductCount
         ];
     
         return response()->json($response);
@@ -138,10 +141,7 @@ class ProductController extends Controller
     public function showById(Request $request, $id){
         $product = Product::where('product_id', '=', $id)->with('categories')->first();
         try {
-                return response()->json([
-                    'status' => 200,
-                    'data' => $product
-                ], 200);
+                return response()->json($product);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -150,13 +150,10 @@ class ProductController extends Controller
         }
     }
 
-    public function showByName(Request $request, $id){
+    public function showByName(Request $request){
         try {
-            $product = Product::where('name_pr', 'LIKE', '%' . $id . '%')->with('categories')->get();
-                return response()->json([
-                    'status' => 200,
-                    'data' => $product
-                ], 200);
+            $product = Product::where('name_pr', 'LIKE', '%' . $request->name_pr . '%') ->get();
+            return response()->json($product);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -274,4 +271,5 @@ class ProductController extends Controller
             'data' => $prod
         ]);
     }
+
 }

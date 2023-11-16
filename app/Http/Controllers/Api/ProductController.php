@@ -27,17 +27,17 @@ class ProductController extends Controller
             'data' => $productlist,
         ])->withHeaders(['X-Total-Count' => $productlist->total()]);
     }
-    
+
 
     public function getProduct(Request $request)
     {
         $productList = Product::with('categories','suppliers', 'image');
-    
+
         // Filter by minimum price
         if ($request->filled('minPrice')) {
             $productList->where('price', '>=', $request->input('minPrice'));
         }
-    
+
         // Filter by search key
         if ($request->filled('searchKey')) {
             $productList->where(function ($query) use ($request) {
@@ -45,46 +45,46 @@ class ProductController extends Controller
                     ->orWhereRaw('LOWER(name_serial) LIKE ?', ['%' . strtolower($request->input('searchKey')) . '%']);
             });
         }
-    
+
         // Filter by maximum price
         if ($request->filled('maxPrice')) {
             $productList->where('price', '<=', $request->input('maxPrice'));
         }
-    
+
         // Filter by supplier name
         if ($request->filled('supplierId')) {
             $productList->whereHas('suppliers', function ($query) use ($request) {
                 $query->where('supplier_id', $request->input('supplierId'));
             });
         }
-    
+
         // Filter by category
         if ($request->filled('categoryId')) {
             $productList->whereHas('categories', function ($query) use ($request) {
                 $query->where('product_category.category_id', $request->input('categoryId'));
             });
         }
-        
+
         // Sort by name or price
         if ($request->filled('SortBy')) {
             $sortField = $request->input('SortBy');
             $IsDescending = $request->IsDescending;
-    
+
             $productList->orderBy($sortField, $IsDescending=="true" ? 'desc' : 'asc');
         }
             // Get total product count for the filtered list
         // Pagination
         $pageNumber = ceil($request->filled('pageNumber') ? $request->pageNumber : 1);
-    $pageSize = ceil($request->filled('pageSize') ? $request->pageSize : 12);
+        $pageSize = ceil($request->filled('pageSize') ? $request->pageSize : 12);
 
         // Calculate offset for pagination
-    $offset = ($pageNumber - 1) * $pageSize;
-    $totalProductCount = $productList->count();
+        $offset = ($pageNumber - 1) * $pageSize;
+        $totalProductCount = $productList->count();
 
-    // Calculate total pages
-    $totalPages = ceil($totalProductCount / 12);
-        // Get paged product list using Eloquent offset and limit
-    $pagedProductList = $productList->offset($offset)->limit($pageSize)->get();
+        // Calculate total pages
+        $totalPages = ceil($totalProductCount / 12);
+            // Get paged product list using Eloquent offset and limit
+        $pagedProductList = $productList->offset($offset)->limit($pageSize)->get();
 
         $response = [
             'Products' => $pagedProductList,
@@ -94,7 +94,7 @@ class ProductController extends Controller
             'TotalPages' => $totalPages,
             'TotalProducts' => $totalProductCount
         ];
-    
+
         return response()->json($response);
     }
 

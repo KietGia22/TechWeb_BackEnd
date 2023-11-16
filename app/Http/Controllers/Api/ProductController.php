@@ -192,9 +192,8 @@ class ProductController extends Controller
         $pr_ct = Product_Category::where('product_id', '=', $id);
         $pr_ct->delete();
         return response()->json([
-            'status' => 'success',
             'message' => "successfully deleted the product",
-        ]);
+        ], 200);
     }
 
     public function create(Request $req){

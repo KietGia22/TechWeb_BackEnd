@@ -22,7 +22,6 @@ class UserController extends Controller
     {
         if (!$this->userHasPermissionToUpdate($id)) {
             return response()->json([
-                'status' => 'failed',
                 'message' => 'Unauthorized to update this user'
             ], 403); // 403 Forbidden
         }
@@ -32,7 +31,6 @@ class UserController extends Controller
 
             if (!$user) {
                 return response()->json([
-                    'status' => 'failed',
                     'message' => 'User not found'
                 ], 404); // 404 Not Found
             }
@@ -40,13 +38,11 @@ class UserController extends Controller
             $user->update($request->all());
 
             return response([
-                'status' => 'success',
                 'message' => 'User updated successfully',
                 'data' => $user,
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => 'failed',
                 'message' => $th->getMessage()
             ], 500); // 500 Internal Server Error
         }

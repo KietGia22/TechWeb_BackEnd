@@ -46,7 +46,8 @@ class AuthController extends Controller
     }
 
     public function register(Request $req){
-         try {$validator = Validator::make($req -> all(),[
+         try {
+            $validator = Validator::make($req -> all(),[
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user,email',
             'phone' => 'required|string',

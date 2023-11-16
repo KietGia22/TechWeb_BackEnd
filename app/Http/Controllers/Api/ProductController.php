@@ -72,24 +72,23 @@ class ProductController extends Controller
     
             $productList->orderBy($sortField, $IsDescending=="true" ? 'desc' : 'asc');
         }
-    
+            // Get total product count for the filtered list
         // Pagination
-        $pageNumber = $request->filled('pageNumber') ? $request->pageNumber : 1;
-    $pageSize = $request->filled('pageSize') ? $request->pageSize : 12;
+        $pageNumber = ceil($request->filled('pageNumber') ? $request->pageNumber : 1);
+    $pageSize = ceil($request->filled('pageSize') ? $request->pageSize : 12);
 
         // Calculate offset for pagination
     $offset = ($pageNumber - 1) * $pageSize;
+    $totalProductCount = $productList->count();
 
+    // Calculate total pages
+    $totalPages = ceil($totalProductCount / 12);
         // Get paged product list using Eloquent offset and limit
     $pagedProductList = $productList->offset($offset)->limit($pageSize)->get();
 
-        // Get total product count for the filtered list
-    $totalProductCount = $productList->count();
-
-        // Calculate total pages
-    $totalPages = ceil($totalProductCount / $pageSize);
         $response = [
             'Products' => $pagedProductList,
+            'ProductsList is: ' => $productList,
             'PageNumber' => $pageNumber,
             'PageSize' => $pageSize,
             'TotalPages' => $totalPages,

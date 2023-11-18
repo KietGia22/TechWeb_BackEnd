@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
@@ -104,5 +105,16 @@ Route::group([
         Route::post('/AddNewProductCategory', [ProductCategoryController::class, 'Create_Link']);
         Route::delete('/DeleteProductCategory', [ProductCategoryController::class, 'Delete_Link']);
         Route::put('/UpdateProductCategory', [ProductCategoryController::class, 'Update_Link']);
+    });
+});
+
+Route::group([
+    'middleware' => ['api', 'cors', 'jwt.verify'],
+    'prefix' => 'cart'
+], function(){
+    Route::middleware('checkToken')->group(function(){
+        Route::post('/AddToCart', [CartController::class, 'AddToCart']);
+        Route::put('/UpdateQuantity', [CartController::class, 'UpdateQuantity']);
+        Route::delete('/EmptyCart', [CartController::class, 'EmptyCart']);
     });
 });

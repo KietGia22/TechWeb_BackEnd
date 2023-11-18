@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -32,9 +33,6 @@ class Product extends Model
     protected $hidden = [
         'updated_at',
         'pivot',
-        'category',
-        'suppliers',
-        'image'
     ];
 
     public function category()
@@ -47,8 +45,13 @@ class Product extends Model
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
-    public function image()
+    public function image():HasMany
     {
         return $this->hasMany(Image::class, 'product_id', 'product_id');
+    }
+
+    public function cart():HasMany
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'product_id');
     }
 }

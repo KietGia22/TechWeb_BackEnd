@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CartController extends Controller
 {
@@ -26,7 +27,7 @@ class CartController extends Controller
                         ->first();
             if($cart){
                 $cart->quantity += $req->quantity;
-                $cart->update(['quantity' => $cart->quantity]);
+                $cart->update();
             } else {
                 $cart = Cart::create([
                     'user_id' =>  $req->user_id,
@@ -74,7 +75,6 @@ class CartController extends Controller
             foreach ($cart as $Item) {
                 $Item->delete();
             }
-
             return response()->json("Cart emptied successfully", 200);
         } catch(\Throwable $th){
             return response()->json($th->getMessage(), 200);

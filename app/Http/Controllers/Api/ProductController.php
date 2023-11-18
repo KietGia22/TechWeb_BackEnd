@@ -37,12 +37,13 @@ class ProductController extends Controller
         if ($request->filled('minPrice')) {
             $productList->where('price', '>=', $request->input('minPrice'));
         }
-
+        
         // Filter by search key
         if ($request->filled('searchKey')) {
-            $productList->where(function ($query) use ($request) {
-                $query->whereRaw('LOWER(name_pr) LIKE ?', ['%' . strtolower($request->input('searchKey')) . '%'])
-                    ->orWhereRaw('LOWER(name_serial) LIKE ?', ['%' . strtolower($request->input('searchKey')) . '%']);
+            $searchKey = strtolower($request->input('searchKey'));
+            $productList->where(function ($query) use ($searchKey) {
+                $query->whereRaw('LOWER(name_pr) LIKE ?', ['%' . $searchKey . '%'])
+                    ->orWhereRaw('LOWER(detail) LIKE ?', ['%' . $searchKey. '%']);
             });
         }
 

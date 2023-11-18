@@ -68,7 +68,7 @@ class SupplierController extends Controller
 
     public function destroy(Request $req, $id)
     {
-        $supp = Supplier::where('category_id', '=', $id)->first();
+        $supp = Supplier::where('supplier_id', '=', $id)->first();
         $supp->delete();
         return response()->json([
             'status' => 'success',

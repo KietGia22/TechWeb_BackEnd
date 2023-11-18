@@ -37,7 +37,7 @@ class ProductController extends Controller
         if ($request->filled('minPrice')) {
             $productList->where('price', '>=', $request->input('minPrice'));
         }
-        
+
         // Filter by search key
         if ($request->filled('searchKey')) {
             $searchKey = strtolower($request->input('searchKey'));

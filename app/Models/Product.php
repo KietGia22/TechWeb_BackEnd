@@ -31,10 +31,13 @@ class Product extends Model
 
     protected $hidden = [
         'updated_at',
-        'pivot'
+        'pivot',
+        'category',
+        'suppliers',
+        'image'
     ];
 
-    public function categories()
+    public function category()
     {
         return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'product_category.category_id');
     }

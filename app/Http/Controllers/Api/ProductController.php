@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(Request $request){
 
         $perPage = $request->input('per_page', 10);
-        $productlist = Product::with('categories')->paginate($perPage);
+        $productlist = Product::with('category')->paginate($perPage);
 
         return response()->json([
             'status' => 200,
@@ -31,7 +31,7 @@ class ProductController extends Controller
 
     public function getProduct(Request $request)
     {
-        $productList = Product::with('categories','suppliers', 'image');
+        $productList = Product::with('category','suppliers', 'image');
 
         // Filter by minimum price
         if ($request->filled('minPrice')) {
@@ -137,12 +137,20 @@ class ProductController extends Controller
     }
 
     public function showById(Request $request, $id){
-        $product = Product::where('product_id', '=', $id)->with('categories')->first();
+        $product = Product::where('product_id', '=', $id)->first();
+        $cate = $product->category;
+        $supp = $product->suppliers;
+        $image = $product->image;
         try {
-                return response()->json($product);
+                return response()->json([
+                    "product" => $product,
+                    "category" => $cate,
+                    "supplier" => $supp,
+                    "image" => $image
+                ], 200);
+                // return response()->json($id, 200);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
@@ -166,7 +174,6 @@ class ProductController extends Controller
 
             if (!$product) {
                 return response()->json([
-                    'status' => 'failed',
                     'message' => 'Product not found'
                 ], 404); // 404 Not Found
             }
@@ -174,26 +181,25 @@ class ProductController extends Controller
             $product->update($request->all());
 
             return response()->json([
-                    'status' => true,
                     'message' =>  "Product updated successfully",
-                    'data' => $product
-                ]);
+                ], 200);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
     }
 
     public function destroy(Request $request, $id){
-        $product = Product::where('product_id', '=', $id)->first();
-        $product->delete();
-        $pr_ct = Product_Category::where('product_id', '=', $id);
-        $pr_ct->delete();
-        return response()->json([
-            'message' => "successfully deleted the product",
-        ], 200);
+        try{
+            $product = Product::where('product_id', '=', $id)->first();
+            $product->delete();
+            $image = Image::where('product_id', '=', $id);
+            $image->delete();
+            return response()->json("successfully deleted the product", 200);
+        } catch (\Throwable $th) {
+            return response()->json("Error", 500);
+        }
     }
 
     public function create(Request $req){
@@ -204,69 +210,35 @@ class ProductController extends Controller
             'price' => 'required|numeric|gt:0',
             'quantity_pr' => 'required|numeric',
             'guarantee_period' => 'required|numeric',
-            'category' => 'required|string',
-            'supplier' => 'required| string'
+            'supplier_id' => 'required| string'
         ]);
 
 
         if($validator -> fails()){
             return response () -> json([
-                'message' => 'Validations fails',
                 'error' => $validator -> errors(),
-                'status' => 422
             ],422);
         }
 
-        $randomId = 'Prod'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
-        $suppID = null;
-        $CateID = null;
+        try {
+            $randomId = 'Prod'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
 
-        $supp_ID = Supplier::where('supplier_name', '=', $req->supplier)->first();
-        if($supp_ID == null){
-            $supplier_random_Id = 'SUPPLIER'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
-            $sup = Supplier::create([
-                'supplier_id' => $supplier_random_Id,
-                'supplier_name' => $req->supplier
+            $prod = Product::create([
+                'product_id' => $randomId,
+                'name_pr' => $req->name_pr,
+                'name_serial' => $req->name_serial,
+                'detail' => $req->detail,
+                'price' => $req->price,
+                'quantity_pr' => $req->quantity_pr,
+                'guarantee_period' => $req->guarantee_period,
+                'supplier_id' => $req->supplier_id
             ]);
-            $suppID = $sup->supplier_id;
-        } else {
-            $suppID = $supp_ID->supplier_id;
+
+            return response()->json($prod, 200);
+
+        } catch (\Throwable $th){
+            return response()->json($th->getMessage(), 500);
         }
-
-        $cate_ID = Category::where('category_name', '=', $req->category)->first();
-        if($cate_ID == null){
-            $cate_random_Id = 'CATE'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
-            $cate = Category::create([
-                'category_id' => $cate_random_Id,
-                'category_name' => $req->category
-            ]);
-            $CateID = $cate->category_id;
-
-        } else {
-            $CateID = $cate_ID->category_id;
-        }
-
-        $prod = Product::create([
-            'product_id' => $randomId,
-            'name_pr' => $req->name_pr,
-            'name_serial' => $req->name_serial,
-            'detail' => $req->detail,
-            'price' => $req->price,
-            'quantity_pr' => $req->quantity_pr,
-            'guarantee_period' => $req->guarantee_period,
-            'supplier_id' => $suppID
-        ]);
-
-        $ship = Product_Category::create([
-                'category_id' => $CateID,
-                'product_id' => $randomId
-            ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product created successfully',
-            'data' => $prod
-        ]);
     }
 
 }

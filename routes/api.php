@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
@@ -73,7 +72,6 @@ Route::group([
 ], function(){
     Route::get('/', [CategoryController::class, 'index']);
     Route::get('/{id}', [CategoryController::class, 'showByName']);
-    Route::get('/show/{id}', [CategoryController::class, 'showByID']);
     Route::middleware('checkAdmin')->group(function(){
         Route::post('/create', [CategoryController::class, 'create']);
         Route::put('/update/{id}', [CategoryController::class, 'update']);

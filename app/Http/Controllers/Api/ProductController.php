@@ -138,9 +138,11 @@ class ProductController extends Controller
     }
 
     public function showById(Request $request, $id){
-        $product = Product::where('product_id', '=', $id)->first();
+        $product = Product::where('product_id', '=', $id)->with('image','suppliers','category')->first();
         try {
-                return response()->json($product, 200);
+                return response()->json([
+                    "product" => $product,
+                ], 200);
                 // return response()->json($id, 200);
         } catch (\Throwable $th) {
             return response()->json([

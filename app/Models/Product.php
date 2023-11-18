@@ -33,6 +33,7 @@ class Product extends Model
     protected $hidden = [
         'updated_at',
         'pivot',
+
     ];
 
     public function category()
@@ -41,7 +42,7 @@ class Product extends Model
     }
 
     public function suppliers():BelongsTo
-    {
+    {   
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 

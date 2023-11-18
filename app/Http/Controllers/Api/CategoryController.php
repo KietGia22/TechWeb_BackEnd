@@ -21,7 +21,6 @@ class CategoryController extends Controller
         try{
             $cate = Category::where('category_name', 'LIKE', '%' . $name . '%')->with('products')->get();
             return response()->json([
-                'status' => 200,
                 'data' => $cate
             ], 200);
         } catch (\Throwable $th) {
@@ -32,70 +31,63 @@ class CategoryController extends Controller
         }
     }
 
+    public function ShowByID(Request $req, $id){
+        try {
+            $cate = Category::where('category_id', '=', $id)->first();
+            return response()->json($cate, 200);
+        } catch (\Throwable $th) {
+            return response()->json("Error", 500);
+        }
+    }
+
     public function update(Request $req, $id)
     {
         try {
             $cate = Category::where('category_id', '=', $id)->first();
 
             if (!$cate) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Category not found'
-                ], 404); // 404 Not Found
+                return response()->json('Category not found', 404); // 404 Not Found
             }
 
             $cate->update($req->all());
 
-            return response()->json([
-                    'status' => true,
-                    'message' =>  "Category updated successfully",
-                    'data' => $cate
-                ]);
+            return response()->json($cate, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+            return response()->json($th->getMessage(), 500);
         }
     }
 
     public function destroy(Request $req, $id)
     {
         $cate = Category::where('category_id', '=', $id)->first();
+        if(!$cate){
+            return response()->json("Not Found", 404);
+        }
         $cate->delete();
-        $pr_ct = Product_Category::where('category_id', '=', $id);
-        $pr_ct->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => "successfully deleted the category",
-        ]);
+        return response()->json("Category deleted successfully", 200);
     }
 
     public function create(Request $req)
     {
-        $validator = Validator::make([
-            'category_name' => 'required|string'
-        ]);
+        try {
+             $validator = Validator::make($req->all(), [
+                'category_name' => 'required|string',
+            ]);
 
-        if($validator->failed()){
-            return response () -> json([
-                'message' => 'Validations fails',
-                'error' => $validator -> errors(),
-                'status' => 422
-            ],422);
+            if($validator->failed()){
+                return response () -> json($validator -> errors(),422);
+            }
+
+            $randomId = 'CATE'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
+
+            $category = Category::create([
+                'category_id' => $randomId,
+                'category_name' => $req->category_name
+            ]);
+
+            return response()->json($category, 200);
+        } catch(\Throwable $th){
+            return response()->json($th->getMessage(), 500);
         }
-
-        $randomId = 'CATE'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
-
-        $category = Category::create([
-            'category_id' => $randomId,
-            'category_name' => $req->category_name
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Category created successfully',
-            'data' => $category
-        ]);
     }
 }

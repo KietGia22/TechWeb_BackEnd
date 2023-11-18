@@ -13,11 +13,14 @@ class Product_Category extends Pivot
 
     public $timestamps = false;
 
-     public $incrementing = false;
+    protected $primaryKey = 'product_id';
+
+    public $incrementing = false;
 
     protected $fillable = [
         'product_id',
         'category_id',
+        'new_category_id'
     ];
 
     protected $hidden = [

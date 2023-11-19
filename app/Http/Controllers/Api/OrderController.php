@@ -15,6 +15,11 @@ class OrderController extends Controller
 {
     //
     public function AddNewOrder(Request $req){
+
+        if (!$this->userHasPermissionToUpdate($req->user_id)) {
+            return response()->json('Unauthorized to update this user', 401);
+        }
+
         if(!User::where('user_id', $req->user_id))
             return response()->json("Not found user", 404);
 
@@ -108,5 +113,14 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    protected function userHasPermissionToUpdate($id)
+    {
+        $currentUser = auth()->user();
+
+        if ($currentUser->user_id == $id) {
+            return true;
+        }
+        return false;
+    }
 
 }

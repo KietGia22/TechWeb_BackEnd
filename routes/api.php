@@ -123,13 +123,10 @@ Route::group([
     'middleware' => ['api', 'cors', 'jwt.verify'],
     'prefix' => 'order'
 ], function(){
-    Route::middleware('checkToken')->group(function(){
         Route::post('/AddNewOrder', [OrderController::class, 'AddNewOrder']);
-        Route::put('/UpdateStateOrder', [OrderController::class, 'UpdateStateOrder']);
-        // Route::middleware('checkAdmin')->group(function(){
-
-        // });
-        Route::get('/GetAllOrder', [OrderController::class, 'GetAllOrder']);
-        Route::post('/GetOrderById', [OrderController::class, 'GetOrderByUserID']);
-    });
+        Route::middleware('checkAdmin')->group(function(){
+            Route::put('/UpdateStateOrder', [OrderController::class, 'UpdateStateOrder']);
+            Route::get('/GetAllOrder', [OrderController::class, 'GetAllOrder']);
+            Route::post('/GetOrderById', [OrderController::class, 'GetOrderByUserID']);
+        });
 });

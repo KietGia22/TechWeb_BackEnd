@@ -17,6 +17,11 @@ class CartController extends Controller
         //     return response()->json($product, 200);
         // }
         try {
+
+            if (!$this->userHasPermissionToUpdate($req->user_id)) {
+                return response()->json('Unauthorized to update this user', 401);
+            }
+
             $product = Product::where('product_id', $req->product_id)->first();
             if(!$product){
                 return response()->json("Not found", 404);
@@ -43,6 +48,9 @@ class CartController extends Controller
 
     public function UpdateQuantity(Request $req){
         try {
+            if (!$this->userHasPermissionToUpdate($req->user_id)) {
+                return response()->json('Unauthorized to update this user', 401);
+            }
 
             $cart = Cart::where('product_id', $req->product_id)
                         ->where('user_id', $req->user_id)
@@ -66,6 +74,10 @@ class CartController extends Controller
 
     public function EmptyCart(Request $req){
         try {
+            if (!$this->userHasPermissionToUpdate($req->user_id)) {
+                return response()->json('Unauthorized to update this user', 401);
+            }
+
             $cart = Cart::where('user_id', $req->user_id)->get();
 
             if ($cart->isEmpty()) {
@@ -79,5 +91,15 @@ class CartController extends Controller
         } catch(\Throwable $th){
             return response()->json($th->getMessage(), 200);
         }
+    }
+
+    protected function userHasPermissionToUpdate($id)
+    {
+        $currentUser = auth()->user();
+
+        if ($currentUser->user_id == $id) {
+            return true;
+        }
+        return false;
     }
 }

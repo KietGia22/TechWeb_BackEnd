@@ -18,30 +18,21 @@ class UserController extends Controller
    public function update(Request $request, $id)
     {
         if (!$this->userHasPermissionToUpdate($id)) {
-            return response()->json([
-                'message' => 'Unauthorized to update this user'
-            ], 403); // 403 Forbidden
+            return response()->json('Unauthorized to update this user', 401);
         }
 
         try {
             $user = User::where('user_id', '=', $id)->first();
 
             if (!$user) {
-                return response()->json([
-                    'message' => 'User not found'
-                ], 404); // 404 Not Found
+                return response()->json('User not found', 404); // 404 Not Found
             }
 
             $user->update($request->all());
 
-            return response([
-                'message' => 'User updated successfully',
-                'data' => $user,
-            ]);
+            return response($user, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage()
-            ], 500); // 500 Internal Server Error
+            return response()->json($th->getMessage(), 500); // 500 Internal Server Error
         }
     }
 
@@ -61,13 +52,8 @@ class UserController extends Controller
         $user = User::where('user_id', '=', $id)->first();
         if($user == null)
         {
-            return response()->json([
-                'message' => 'User not found',
-            ], 404);
+            return response()->json('User not found', 404);
         }
-        return response()->json([
-            'status' => 'success',
-            'message' => 'successfully deleted the user'
-        ], 200);
+        return response()->json('successfully deleted the user', 200);
     }
 }

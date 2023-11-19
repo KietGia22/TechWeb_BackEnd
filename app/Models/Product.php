@@ -33,7 +33,6 @@ class Product extends Model
     protected $hidden = [
         'updated_at',
         'pivot',
-
     ];
 
     public function category()
@@ -42,7 +41,7 @@ class Product extends Model
     }
 
     public function suppliers():BelongsTo
-    {   
+    {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
@@ -54,5 +53,10 @@ class Product extends Model
     public function cart():HasMany
     {
         return $this->hasMany(Cart::class, 'product_id', 'product_id');
+    }
+
+    public function detail_order():HasMany
+    {
+        return $this->hasMany(DetailOrder::class, 'product_id', 'product_id');
     }
 }

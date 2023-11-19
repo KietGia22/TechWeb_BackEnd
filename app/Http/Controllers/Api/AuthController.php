@@ -82,7 +82,7 @@ class AuthController extends Controller
             'data' => $user
         ]);} catch (\Throwable $th) {
             return response()->json(
-                $th->getMessage(), 404);
+                $th->getMessage(), 500);
         }
     }
 

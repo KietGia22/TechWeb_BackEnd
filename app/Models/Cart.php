@@ -12,7 +12,7 @@ class Cart extends Model
     use HasFactory;
     protected $table = 'cart';
 
-    protected $primaryKey = 'product_id';
+    protected $primaryKey = 'user_id';
 
     public $timestamps = false;
 

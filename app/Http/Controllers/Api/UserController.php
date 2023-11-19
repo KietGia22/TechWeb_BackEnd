@@ -12,10 +12,7 @@ class UserController extends Controller
     public function index()
     {
         $user = User::all();
-        return response()->json([
-            'status' => 200,
-            'data' => $user,
-        ]);
+        return response()->json($user, 200);
     }
 
    public function update(Request $request, $id)

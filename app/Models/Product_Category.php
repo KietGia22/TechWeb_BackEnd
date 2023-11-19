@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Product_Category extends Pivot
@@ -27,4 +28,14 @@ class Product_Category extends Pivot
         'updated_at',
         'created_at'
     ];
+
+    public function category():BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function product():BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

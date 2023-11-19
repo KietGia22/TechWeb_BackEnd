@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
@@ -114,5 +116,20 @@ Route::group([
         Route::post('/AddToCart', [CartController::class, 'AddToCart']);
         Route::put('/UpdateQuantity', [CartController::class, 'UpdateQuantity']);
         Route::delete('/EmptyCart', [CartController::class, 'EmptyCart']);
+    });
+});
+
+Route::group([
+    'middleware' => ['api', 'cors', 'jwt.verify'],
+    'prefix' => 'order'
+], function(){
+    Route::middleware('checkToken')->group(function(){
+        Route::post('/AddNewOrder', [OrderController::class, 'AddNewOrder']);
+        Route::put('/UpdateStateOrder', [OrderController::class, 'UpdateStateOrder']);
+        // Route::middleware('checkAdmin')->group(function(){
+
+        // });
+        Route::get('/GetAllOrder', [OrderController::class, 'GetAllOrder']);
+        Route::post('/GetOrderById', [OrderController::class, 'GetOrderByUserID']);
     });
 });

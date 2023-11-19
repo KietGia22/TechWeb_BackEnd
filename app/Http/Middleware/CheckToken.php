@@ -21,7 +21,7 @@ class CheckToken
         } else {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Unauthorized'
+                'message' => 'Who are you'
             ], 401); // 401 Unauthorized
         }
     }

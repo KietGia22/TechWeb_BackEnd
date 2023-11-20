@@ -49,6 +49,7 @@ class OrderController extends Controller
             $cart = Cart::where('user_id', $req->user_id)->get();
 
             foreach($cart as $item){
+                $new_quantity = 0;
                 //Tính tổng tiền
                 $product = Product::where('product_id', $item['product_id'])->first();
                 $detail_price = $product->price * $item->quantity;
@@ -58,7 +59,7 @@ class OrderController extends Controller
                 //Kiêm tra só lượng hàng còn đủ không
                 if($new_quantity < 0){
                     $order->delete();
-                    return response()->json("Số lượng hầng khách hàng muốn mua cao hơn số lượng hiện có", 422);
+                    return response()->json("Số lượng hàng khách hàng muốn mua cao hơn số lượng hiện có", 422);
                 }
                 else
                     $product->update(['quantity_pr' => $new_quantity]);

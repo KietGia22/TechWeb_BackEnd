@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DetailOrderController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
@@ -108,6 +110,7 @@ Route::group([
     });
 });
 
+//Cart
 Route::group([
     'middleware' => ['api', 'cors', 'jwt.verify'],
     'prefix' => 'cart'
@@ -119,6 +122,7 @@ Route::group([
     });
 });
 
+//Order
 Route::group([
     'middleware' => ['api', 'cors', 'jwt.verify'],
     'prefix' => 'order'
@@ -129,4 +133,22 @@ Route::group([
             Route::get('/GetAllOrder', [OrderController::class, 'GetAllOrder']);
             Route::post('/GetOrderById', [OrderController::class, 'GetOrderByUserID']);
         });
+});
+
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'detailOrder'
+],function(){
+    Route::get('/GetOrderDetailByOrderID', [DetailOrderController::class, 'GetOrderDetailByOrderID']);
+});
+
+//Admin
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'admin'
+], function(){
+    Route::middleware('checkAdmin')->group(function(){
+        Route::get('/GetTotalCustomer', [AdminController::class, 'GetTotalCustomer']);
+        Route::get('/GetTotalOrder', [AdminController::class, 'GetTotalOrder']);
+    });
 });

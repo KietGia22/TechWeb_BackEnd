@@ -27,9 +27,10 @@ class DetailOrder extends Model
 
     protected $hidden = [
         'updated_at',
+        'order_id'
     ];
 
-    public function product():BelongsTo
+    public function product_id():BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
     }

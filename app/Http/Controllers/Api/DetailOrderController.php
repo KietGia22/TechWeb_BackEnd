@@ -3,9 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailOrder;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class DetailOrderController extends Controller
 {
     //
+    public function GetOrderDetailByOrderID(Request $req)
+    {
+        $order = DetailOrder::where('order_id', $req->order_id)->with('product_id')->get();
+        return response()->json($order, 200);
+    }
 }

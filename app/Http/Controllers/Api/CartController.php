@@ -102,4 +102,22 @@ class CartController extends Controller
         }
         return false;
     }
+
+    public function getCartProduct(Request $request)
+    {
+    $productsInCart = Cart::with(['product.image', 'product.category', 'product.suppliers'])
+        ->where('user_id', $request->user_id)
+        ->get();
+
+    return response()->json($productsInCart);
+    }
+
+    public function getUserTotalProduct(Request $request)
+    {
+        $user_id = $request->input('user_id');
+
+        $totalProduct = Cart::where('user_id', $user_id)->count();
+
+        return response()->json($totalProduct);
+    }
 }

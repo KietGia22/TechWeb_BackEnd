@@ -53,17 +53,18 @@ class CartController extends Controller
             }
 
             $cart = Cart::where('product_id', $req->product_id)
-                        ->where('user_id', $req->user_id)
-                        ->first();
+                        ->where('user_id', $req->user_id);
+
             if(!$cart){
                 return response()->json("Not found", 404);
             }
+
             if($req->quantity == 0){
                 $cart->delete();
                 return response()->json("Successfully", 200);
             }
             else {
-                $cart->quantity += $req->quantity;
+                $cart->quantity = $req->quantity;
                 $cart->update(['quantity' => $cart->quantity]);
             }
             return response() -> json($cart, 200);

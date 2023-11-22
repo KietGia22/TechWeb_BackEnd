@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class AdminController extends Controller
 {
@@ -35,5 +36,28 @@ class AdminController extends Controller
         {
             return response()->json($th->getMessage(), 500);
         }
+    }
+
+    public function getRevenueByDay()
+    {
+        $startDate = Carbon::today()->startOfWeek();
+        $endDate = Carbon::today();
+
+        $revenueByDay = [];
+
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $revenue = Order::whereDate('create_order_at', $date->toDateString())->sum('total');
+
+            $label = $date->format('l');
+
+            $revenueByDay[$label] = $revenue;
+        }
+
+        $result = [
+            'day' => array_keys($revenueByDay),
+            'revenue' => array_values($revenueByDay),
+        ];
+
+        return response()->json($result);
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DetailOrderController;
+use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
@@ -152,5 +153,16 @@ Route::group([
     Route::middleware('checkAdmin')->group(function(){
         Route::get('/GetTotalCustomer', [AdminController::class, 'GetTotalCustomer']);
         Route::get('/GetTotalOrder', [AdminController::class, 'GetTotalOrder']);
+        Route::get('/getRevenueByDay', [AdminController::class, 'getRevenueByDay']);
+    });
+});
+
+//Discount
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'discount'
+], function(){
+    Route::middleware('checkAdmin')->group(function(){
+        Route::get('/GetAllDiscount', [DiscountController::class, 'GetAllDiscount']);
     });
 });

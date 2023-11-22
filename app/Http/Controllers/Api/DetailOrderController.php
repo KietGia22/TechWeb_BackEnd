@@ -12,7 +12,14 @@ class DetailOrderController extends Controller
     //
     public function GetOrderDetailByOrderID(Request $req)
     {
-        $order = DetailOrder::where('order_id', $req->order_id)->with('product_id')->get();
-        return response()->json($order, 200);
+        try {
+            $order = DetailOrder::where('order_id', $req->order_id)
+                    ->with('product_id')
+                    ->with(['product_id', 'product_id.image'])
+                    ->get();
+            return response()->json($order, 200);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 500);
+        }
     }
 }

@@ -61,7 +61,7 @@ class ProductController extends Controller
 
         // Filter by category
         if ($request->filled('categoryId')) {
-            $productList->whereHas('categories', function ($query) use ($request) {
+            $productList->whereHas('category', function ($query) use ($request) {
                 $query->where('product_category.category_id', $request->input('categoryId'));
             });
         }

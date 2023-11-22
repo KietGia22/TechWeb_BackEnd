@@ -118,6 +118,8 @@ Route::group([
 ], function(){
     Route::middleware('checkToken')->group(function(){
         Route::post('/AddToCart', [CartController::class, 'AddToCart']);
+        Route::post('/GetCartProduct',[CartController::class, 'getCartProduct']);
+        Route::post('/GetUserTotalProduct',[CartController::class,'getUserTotalProduct']);
         Route::put('/UpdateQuantity', [CartController::class, 'UpdateQuantity']);
         Route::delete('/EmptyCart', [CartController::class, 'EmptyCart']);
     });

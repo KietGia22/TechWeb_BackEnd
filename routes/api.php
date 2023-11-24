@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\Api\SendMailController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
 use Illuminate\Http\Request;
@@ -34,6 +35,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/images/{product_id}',[ImageController::class,'getImagesByProductId']);
+
+
 Route::group([
     'middleware'=> ['api', 'cors'],
     'prefix' => 'auth'
@@ -43,7 +46,6 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/userProfile', [AuthController::class, 'userProfile']);
-    Route::post('/changePassword', [AuthController::class, 'changePassWord']);
     Route::put('/update/{id}', [UserController::class, 'update']);
     Route::middleware('checkAdmin')->group(function(){
         Route::get('/userAdmin', [AuthController::class, 'isAdmin']);
@@ -165,4 +167,12 @@ Route::group([
     Route::middleware('checkAdmin')->group(function(){
         Route::get('/GetAllDiscount', [DiscountController::class, 'GetAllDiscount']);
     });
+});
+
+//sendmail
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'sendmail'
+], function(){
+    Route::post("/ForgetPassword", [SendMailController::class, 'ForgetPassword']);
 });

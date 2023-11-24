@@ -146,24 +146,6 @@ class AuthController extends Controller
         //     'message' => 'User successfully changed password',
         //     'user' => $user,
         // ], 201);
-
-        try{
-            $email = $request->email;
-            $user = User::where('email', $request->email)->first();
-
-            if(!$user)
-                return response()->json("User not found", 404);
-
-            $createPassword = ''.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 6);
-            $newPassword = Hash::make($createPassword);
-            $user->update(['password' => $newPassword]);
-
-            Mail::to($email)->send(new PasswordChanged($createPassword, $user->name));
-            return response()->json("Password Changed", 200);
-        } catch (\Throwable $th)
-        {
-            return response()->json($th->getMessage(), 500);
-        }
     }
 
 }

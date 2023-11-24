@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordChanged;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -38,6 +41,8 @@ class AuthController extends Controller
         }
 
         $user = JWTAuth::user();
+
+        Session::put('access_token', $token);
 
         return response() -> json([
             'user' => $user,
@@ -121,26 +126,44 @@ class AuthController extends Controller
     }
 
     public function changePassWord(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'old_password' => 'required|string|min:6',
-            'new_password' => 'required|string|confirmed|min:6',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'old_password' => 'required|string|min:6',
+        //     'new_password' => 'required|string|confirmed|min:6',
+        // ]);
 
-        if($validator->fails()){
-            return response()->json([
-                'message' => 'Passwords do not match',
-            ], 400);
+        // if($validator->fails()){
+        //     return response()->json([
+        //         'message' => 'Passwords do not match',
+        //     ], 400);
+        // }
+        // $userId = Auth::user()->user_id;
+
+        // $user = User::where('user_id', $userId)->update(
+        //             ['password' => bcrypt($request->new_password)]
+        //         );
+
+        // return response()->json([
+        //     'message' => 'User successfully changed password',
+        //     'user' => $user,
+        // ], 201);
+
+        try{
+            $email = $request->email;
+            $user = User::where('email', $request->email)->first();
+
+            if(!$user)
+                return response()->json("User not found", 404);
+
+            $createPassword = ''.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 6);
+            $newPassword = Hash::make($createPassword);
+            $user->update(['password' => $newPassword]);
+
+            Mail::to($email)->send(new PasswordChanged($createPassword, $user->name));
+            return response()->json("Password Changed", 200);
+        } catch (\Throwable $th)
+        {
+            return response()->json($th->getMessage(), 500);
         }
-        $userId = Auth::user()->user_id;
-
-        $user = User::where('user_id', $userId)->update(
-                    ['password' => bcrypt($request->new_password)]
-                );
-
-        return response()->json([
-            'message' => 'User successfully changed password',
-            'user' => $user,
-        ], 201);
     }
 
 }

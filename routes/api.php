@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\ImageController;
 use App\Http\Requests\PostStoreRequest;
+use Maatwebsite\Excel\Row;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -178,4 +180,12 @@ Route::group([
     'prefix' => 'sendmail'
 ], function(){
     Route::post("/ForgetPassword", [SendMailController::class, 'ForgetPassword']);
+});
+
+//GetExcel
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'getExcel'
+], function(){
+    Route::get('/GetExcel', [OrderController::class, 'export']);
 });

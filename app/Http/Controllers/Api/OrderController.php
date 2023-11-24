@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\OrderExport;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\DetailOrder;
@@ -10,6 +11,7 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -122,6 +124,17 @@ class OrderController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function export(Request $req)
+    {
+        $export = new OrderExport;
+
+        $fileName = 'excels/' . now()->format('Y-m-d_H-i-s') . '_export.xlsx';
+
+        Excel::store($export, $fileName, 'local');
+
+        return response()->json(['path' => $fileName], 200);
     }
 
 }

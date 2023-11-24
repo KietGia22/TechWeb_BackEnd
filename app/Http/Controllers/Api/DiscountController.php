@@ -19,4 +19,15 @@ class DiscountController extends Controller
             return response()->json($th->getMessage(), 500);
         }
     }
+
+    public function GetAllDiscount1(Request $req)
+    {
+        try
+        {
+            $dis = Discount::get();
+            return response()->json("123", 200);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 500);
+        }
+    }
 }

@@ -76,7 +76,7 @@ class CartController extends Controller
     public function EmptyCart(Request $req){
         try {
             if (!$this->userHasPermissionToUpdate($req->user_id)) {
-                return response()->json('Unauthorized to update this user', 401);
+                return response()->json($req->user_id);
             }
 
             $cart = Cart::where('user_id', $req->user_id)->get();

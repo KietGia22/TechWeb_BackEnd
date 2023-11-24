@@ -25,7 +25,6 @@ class OrderController extends Controller
 
         try {
             $randomId = 'Ord'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 7);
-
             $now = Carbon::now();
             $now->setTimezone('Asia/Bangkok');
 
@@ -69,7 +68,8 @@ class OrderController extends Controller
                     'order_id' => $randomId,
                     'product_id' => $item->product_id,
                     'price_pr' => $product->price,
-                    'quantity_pr' => $item->quantity
+                    'quantity_pr' => $item->quantity,
+                    'warranty period' => 12,
                 ]);
 
                 $detail_order->save();

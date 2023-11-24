@@ -43,7 +43,10 @@ class ProductController extends Controller
             $searchKey = strtolower($request->input('searchKey'));
             $productList->where(function ($query) use ($searchKey) {
                 $query->whereRaw('LOWER(name_pr) LIKE ?', ['%' . $searchKey . '%'])
-                    ->orWhereRaw('LOWER(detail) LIKE ?', ['%' . $searchKey. '%']);
+                    ->orWhereRaw('LOWER(detail) LIKE ?', ['%' . $searchKey . '%'])
+                    ->orWhereHas('category', function ($categoryQuery) use ($searchKey) {
+                        $categoryQuery->whereRaw('LOWER(category_name) LIKE ?', ['%' . $searchKey . '%']);
+                    });
             });
         }
 
@@ -235,5 +238,16 @@ class ProductController extends Controller
             return response()->json($th->getMessage(), 500);
         }
     }
-
+    public function deleteImage(request $req){
+        $imagePath = $request->input('image_path');
+        $productId = $request->input('product_id');
+        if(Storage::exists($imagePath)){
+            Storage::delete($imagePath);
+        Image::where('product_id', $productId)->where('image_path', $imagePath)->delete();
+        return response()->json(['message' => 'Image deleted successfully'], 200);
+        }
+        else{
+            return response()->json(['error' => 'Image not found'], 404);
+        }
+    }
 }

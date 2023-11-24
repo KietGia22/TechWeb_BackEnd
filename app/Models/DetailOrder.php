@@ -23,6 +23,7 @@ class DetailOrder extends Model
         'product_id',
         'price_pr',
         'quantity_pr',
+        'warranty period',
     ];
 
     protected $hidden = [

@@ -121,7 +121,7 @@ Route::group([
         Route::post('/GetCartProduct',[CartController::class, 'getCartProduct']);
         Route::post('/GetUserTotalProduct',[CartController::class,'getUserTotalProduct']);
         Route::put('/UpdateQuantity', [CartController::class, 'UpdateQuantity']);
-        Route::delete('/EmptyCart', [CartController::class, 'EmptyCart']);
+        Route::post('/EmptyCart', [CartController::class, 'EmptyCart']);
     });
 });
 
@@ -143,6 +143,9 @@ Route::group([
     'prefix' => 'detailOrder'
 ],function(){
     Route::get('/GetOrderDetailByOrderID', [DetailOrderController::class, 'GetOrderDetailByOrderID']);
+    Route::middleware('checkToken')->group(function(){
+        Route::post('/addNewOrderDetail',[DetailOrderController::class,'addNewOrderDetail']);
+        });
 });
 
 //Admin

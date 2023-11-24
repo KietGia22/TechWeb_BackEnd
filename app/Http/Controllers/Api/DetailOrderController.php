@@ -22,4 +22,17 @@ class DetailOrderController extends Controller
             return response()->json($th->getMessage(), 500);
         }
     }
+    public function addNewOrderDetail(Request $request)
+    {
+        $detailOrderData = $request->input('detailOrder');
+        // Kiểm tra token nếu cần
+        // ...
+
+        // Lưu chi tiết đơn hàng vào database
+        foreach ($detailOrderData as $detail) {
+            DetailOrder::create($detail);
+        }
+
+        return response()->json(['message' => 'Order details added successfully'], 201);
+    }
 }

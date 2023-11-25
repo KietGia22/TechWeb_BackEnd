@@ -131,10 +131,10 @@ Route::group([
     'prefix' => 'order'
 ], function(){
         Route::post('/AddNewOrder', [OrderController::class, 'AddNewOrder']);
+        Route::post('/GetOrderById', [OrderController::class, 'GetOrderByUserID']);
         Route::middleware('checkAdmin')->group(function(){
             Route::put('/UpdateStateOrder', [OrderController::class, 'UpdateStateOrder']);
             Route::get('/GetAllOrder', [OrderController::class, 'GetAllOrder']);
-            Route::post('/GetOrderById', [OrderController::class, 'GetOrderByUserID']);
         });
 });
 

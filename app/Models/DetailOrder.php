@@ -31,7 +31,7 @@ class DetailOrder extends Model
         'order_id'
     ];
 
-    public function product_id():BelongsTo
+    public function product():BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
     }

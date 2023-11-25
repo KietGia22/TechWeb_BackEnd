@@ -112,7 +112,7 @@ class OrderController extends Controller
     }
     public function GetOrderByUserID(Request $req)
     {
-        $order = Order::where('user_id', '=', $req->user_id)->with('CustumerInfor', 'discountInFor')->get();
+        $order = Order::where('user_id', '=', $req->user_id)->with('CustomerInfor', 'discountInFor')->with('detail_order.product','detail_order.product.image')->get();
         return response()->json($order, 200);
     }
 

@@ -38,7 +38,7 @@ class Order extends Model
         'updated_at',
     ];
 
-    public function CustumerInfor():BelongsTo
+    public function CustomerInfor():BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

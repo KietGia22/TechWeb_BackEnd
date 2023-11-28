@@ -68,6 +68,7 @@ Route::group([
     Route::get('/getImagesByProductId/{id}',[ApiProductController::class,'getImagesByProductId']);
     Route::post('/name', [ApiProductController::class, 'showByName']);
     Route::middleware('checkAdmin')->group(function(){
+        Route::post('/deleteImage', [ApiProductController::class,'deleteImage']);
         Route::post('/createProduct', [ApiProductController::class, 'create'] );
         Route::put('/update/{id}', [ApiProductController::class, 'update']);
         Route::delete('/delete/{id}', [ApiProductController::class, 'destroy']);

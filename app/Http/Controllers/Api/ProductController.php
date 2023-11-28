@@ -114,7 +114,7 @@ class ProductController extends Controller
             Image::create([
                 'img_id' => $randomId,
                 'product_id' => $request->product_id,
-                'image_path' => $imageName
+                'image_path' => "http://127.0.0.1:8000/storage/".$imageName
             ]);
 
             Storage::disk('public')->put($imageName, file_get_contents($request->image_path));
@@ -232,22 +232,19 @@ class ProductController extends Controller
                 'supplier_id' => $req->supplier_id
             ]);
 
-            return response()->json($prod, 200);
+            return response()->json($prod->product_id, 200);
 
         } catch (\Throwable $th){
             return response()->json($th->getMessage(), 500);
         }
     }
     public function deleteImage(request $req){
-        $imagePath = $request->input('image_path');
-        $productId = $request->input('product_id');
+        $imagePath = $req->input('image_path');
+        $productId = $req->input('product_id');
         if(Storage::exists($imagePath)){
             Storage::delete($imagePath);
+        }
         Image::where('product_id', $productId)->where('image_path', $imagePath)->delete();
         return response()->json(['message' => 'Image deleted successfully'], 200);
-        }
-        else{
-            return response()->json(['error' => 'Image not found'], 404);
-        }
     }
 }

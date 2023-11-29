@@ -50,9 +50,7 @@ class SupplierController extends Controller
             $supp = Supplier::where('supplier_id', '=', $id)->first();
 
             if (!$supp) {
-                return response()->json([
-                    'message' => 'Category not found'
-                ], 404); // 404 Not Found
+                return response()->json('Category not found', 404); // 404 Not Found
             }
 
             $supp->update($req->all());
@@ -68,24 +66,29 @@ class SupplierController extends Controller
 
     public function destroy(Request $req, $id)
     {
-        $supp = Supplier::where('supplier_id', '=', $id)->first();
-        $supp->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => "successfully deleted the category",
-        ]);
+        try {
+            $supp = Supplier::where('supplier_id', '=', $id)->first();
+            $supp->delete();
+            return response()->json("successfully deleted the supplier",);
+        } catch (\Throwable $th){
+            return response()->json($th->getMessage(), 500);
+        }
     }
 
     public function create(Request $req)
     {
-        $randomId = 'SUPPLIER' . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
+        try {
+            $randomId = 'SUPPLIER' . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
 
-        $supplier = Supplier::create([
-            'supplier_id' => $randomId,
-            'supplier_name' => $req->supplier_name
-        ]);
+            $supplier = Supplier::create([
+                'supplier_id' => $randomId,
+                'supplier_name' => $req->supplier_name
+            ]);
 
-        return response()->json($supplier, 200);
+            return response()->json($supplier, 200);
+        } catch (\Throwable $th){
+            return response()->json($th->getMessage(), 500);
+        }
 
     }
 }

@@ -172,6 +172,9 @@ Route::group([
 ], function(){
     Route::middleware('checkAdmin')->group(function(){
         Route::get('/GetAllDiscount', [DiscountController::class, 'GetAllDiscount']);
+        Route::post('/CreateDiscount', [DiscountController::class, 'CreateDiscount']);
+        Route::put('/UpdateDiscount/{id}', [DiscountController::class, 'UpdateDiscount']);
+        Route::delete('/DeleteDiscount/{id}', [DiscountController::class, 'DeleteDiscount']);
     });
 });
 

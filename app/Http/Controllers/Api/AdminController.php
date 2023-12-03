@@ -60,4 +60,60 @@ class AdminController extends Controller
 
         return response()->json($result);
     }
+
+
+    
+    public function getRevenue()
+    {
+        $currentMonthStart = Carbon::now()->firstOfMonth();
+        $currentMonthEnd = $currentMonthStart->copy()->endOfMonth();
+        $lastMonthStart = $currentMonthStart->copy()->subMonth()->firstOfMonth();
+        $lastMonthEnd = $lastMonthStart->copy()->endOfMonth();
+    
+        $ordersThisMonth = Order::whereBetween('create_order_at', [$currentMonthStart, $currentMonthEnd])->get();
+        $ordersLastMonth = Order::whereBetween('create_order_at', [$lastMonthStart, $lastMonthEnd])->get();
+    
+        $thisMonthRevenue = $ordersThisMonth->sum(function ($order) {
+            return $order->total - $order->delivery_fee - round(($order->discount / 100) * $order->total, 2);
+        });
+    
+        $lastMonthRevenue = $ordersLastMonth->sum(function ($order) {
+            return $order->total - $order->delivery_fee - round(($order->discount / 100) * $order->total, 2);
+        });
+    
+        $percentDifference = ($lastMonthRevenue > 0) ? (($thisMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : 100;
+    
+        return response()->json([
+            'thisMonthRevenue' => $thisMonthRevenue,
+            'lastMonthRevenue' => $lastMonthRevenue,
+            'percentDifference' => round($percentDifference, 2),
+        ]);
+    }
+        
+    public function getRevenueByYear($year)
+    {
+        $endDate = now(); // Current date
+
+        $labels = [];
+        $revenues = [];
+
+        for ($month = 1; $month <= $endDate->month; $month++) {
+            $startDateOfMonth = now()->setYear($year)->setMonth($month)->startOfMonth();
+            $endDateOfMonth = now()->setYear($year)->setMonth($month)->endOfMonth();
+
+            $revenue = Order::whereBetween('create_order_at', [$startDateOfMonth, $endDateOfMonth])
+                ->sum('total');
+
+            $labels[] = $startDateOfMonth->format('F');
+            $revenues[] = $revenue;
+        }
+
+        $result = [
+            'labels' => $labels,
+            'revenues' => $revenues,
+        ];
+
+        return response()->json($result);
+    }
+
 }

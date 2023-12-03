@@ -147,7 +147,7 @@ Route::group([
     'middleware' => ['api', 'cors'],
     'prefix' => 'detailOrder'
 ],function(){
-    Route::get('/GetOrderDetailByOrderID', [DetailOrderController::class, 'GetOrderDetailByOrderID']);
+    Route::get('/GetOrderDetailByOrderID/{id}', [DetailOrderController::class, 'GetOrderDetailByOrderID']);
     Route::middleware('checkToken')->group(function(){
         Route::post('/addNewOrderDetail',[DetailOrderController::class,'addNewOrderDetail']);
         });
@@ -162,6 +162,8 @@ Route::group([
         Route::get('/GetTotalCustomer', [AdminController::class, 'GetTotalCustomer']);
         Route::get('/GetTotalOrder', [AdminController::class, 'GetTotalOrder']);
         Route::get('/getRevenueByDay', [AdminController::class, 'getRevenueByDay']);
+        Route::get('/getRevenue',[AdminController::class,'getRevenue']);
+        Route::get('/getRevenueByYear/{year}',[AdminController::class,'getRevenueByYear']);
     });
 });
 

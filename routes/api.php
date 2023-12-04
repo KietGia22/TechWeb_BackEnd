@@ -164,6 +164,7 @@ Route::group([
         Route::get('/getRevenueByDay', [AdminController::class, 'getRevenueByDay']);
         Route::get('/getRevenue',[AdminController::class,'getRevenue']);
         Route::get('/getRevenueByYear/{year}',[AdminController::class,'getRevenueByYear']);
+        Route::get('/GetTopSellerProduct/{count}',[AdminController::class,'getTopSellerProduct']);
     });
 });
 

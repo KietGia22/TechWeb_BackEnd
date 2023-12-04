@@ -107,7 +107,7 @@ class OrderController extends Controller
 
     public function GetAllOrder(Request $req)
     {
-        $order = Order::with('CustumerInfor', 'discountInFor')->get();
+        $order = Order::with('CustomerInfor', 'discountInFor')->get();
         return response()->json($order, 200);
     }
     public function GetOrderByUserID(Request $req)

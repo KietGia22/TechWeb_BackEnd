@@ -10,12 +10,12 @@ use Illuminate\Http\Request;
 class DetailOrderController extends Controller
 {
     //
-    public function GetOrderDetailByOrderID(Request $req)
+    public function GetOrderDetailByOrderID($req)
     {
         try {
-            $order = DetailOrder::where('order_id', $req->order_id)
-                    ->with('product_id')
-                    ->with(['product_id', 'product_id.image'])
+            $order = DetailOrder::where('order_id', $req)
+                    ->with('product')
+                    ->with(['product', 'product.image'])
                     ->get();
             return response()->json($order, 200);
         } catch (\Throwable $th) {

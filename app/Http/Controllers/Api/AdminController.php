@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\DetailOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class AdminController extends Controller
 {
@@ -15,7 +18,7 @@ class AdminController extends Controller
     {
         try
         {
-            $user = User::where('role', '=', 'client')->count();
+            $user = User::where('role', '=', 'user')->count();
             return response()->json($user, 200);
 
         } catch(\Throwable $th)
@@ -116,4 +119,26 @@ class AdminController extends Controller
         return response()->json($result);
     }
 
+    public function getTopSellerProduct($count) {
+        $subquery = DetailOrder::groupBy('product_id')
+            ->select([
+                'product_id',
+                DB::raw('SUM(quantity_pr) as total_quantity_sold')
+            ]);
+    
+        $result = DB::table(DB::raw("({$subquery->toSql()}) as sq"))
+            ->join('products', 'sq.product_id', '=', 'products.product_id')
+            ->leftJoin('image', 'image.product_id', '=', 'sq.product_id')
+            ->select([
+                'sq.product_id',
+                'sq.total_quantity_sold',
+                'products.name_pr as product_name',
+                DB::raw('(SELECT image_path FROM image WHERE image.product_id = sq.product_id LIMIT 1) as image')
+            ])
+            ->orderByDesc('sq.total_quantity_sold')
+            ->take($count)
+            ->get();
+    
+        return response()->json($result);
+    }
 }

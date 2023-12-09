@@ -17,9 +17,9 @@ class UserController extends Controller
 
    public function update(Request $request, $id)
     {
-        if (!$this->userHasPermissionToUpdate($id)) {
-            return response()->json('Unauthorized to update this user', 401);
-        }
+        // if (!$this->userHasPermissionToUpdate($request->user_id)) {
+        //     return response()->json('Unauthorized to update this user', 401);
+        // }
 
         try {
             $user = User::where('user_id', '=', $id)->first();

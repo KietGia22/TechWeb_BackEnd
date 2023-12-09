@@ -186,7 +186,7 @@ Route::group([
     'middleware' => ['api', 'cors'],
     'prefix' => 'sendmail'
 ], function(){
-    Route::post("/ForgetPassword", [SendMailController::class, 'ForgetPassword']);
+    Route::post("/ForgetPassword/{emails}", [SendMailController::class, 'ForgetPassword']);
 });
 
 //GetExcel

@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Mail;
 class SendMailController extends Controller
 {
     //
-    public function ForgetPassword(Request $request)
+    public function ForgetPassword($emails)
     {
 
         try{
-            $email = $request->email;
-            $user = User::where('email', $request->email)->first();
+            $email = $emails;
+            $user = User::where('email', $emails)->first();
 
             if(!$user)
                 return response()->json("User not found", 404);

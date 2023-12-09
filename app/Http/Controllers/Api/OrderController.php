@@ -134,7 +134,9 @@ class OrderController extends Controller
 
         Excel::store($export, $fileName, 'local');
 
-        return response()->json(['path' => $fileName], 200);
+        return Excel::download($export, 'example.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+
+
     }
 
 }

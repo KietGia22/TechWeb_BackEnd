@@ -28,6 +28,10 @@
 -   **Frontend:** [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), [JavaScript](https://www.javascript.com/), [NextJS](https://nextjs.org/docs)
 -   **Database:** [MySQL](https://www.mysql.com/)
 
+## Repo
+Repo FrontEnd: https://github.com/Aransu/Laravel-front-end
+Repo BackEnd: https://github.com/KietGia22/TechWeb_BackEnd
+
 ## THÀNH VIÊN NHÓM
 
 | STT | MSSV     | Họ và Tên            | GitHub                       | Email                  |

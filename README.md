@@ -29,8 +29,8 @@
 -   **Database:** [MySQL](https://www.mysql.com/)
 
 ## Repo
-Repo FrontEnd: https://github.com/Aransu/Laravel-front-end
-Repo BackEnd: https://github.com/KietGia22/TechWeb_BackEnd
+-   **Repo FrontEnd**: https://github.com/Aransu/Laravel-front-end
+-   **Repo BackEnd**: https://github.com/KietGia22/TechWeb_BackEnd
 
 ## THÀNH VIÊN NHÓM
 

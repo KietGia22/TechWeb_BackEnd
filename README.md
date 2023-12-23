@@ -32,6 +32,17 @@
 -   **Repo FrontEnd**: https://github.com/Aransu/Laravel-front-end
 -   **Repo BackEnd**: https://github.com/KietGia22/TechWeb_BackEnd
 
+## Cách chạy repo này
+-  Clone repo này về
+-  Sau đó, chạy
+```
+    composer install
+```
+-  Cuối cùng
+```
+    php artisan:serve
+```
+
 ## THÀNH VIÊN NHÓM
 
 | STT | MSSV     | Họ và Tên            | GitHub                       | Email                  |
@@ -40,3 +51,5 @@
 | 2   | 21521897 | Thi Thành Công       | https://github.com/Aransu    | 21521897@gm.uit.edu.vn |
 | 3   | 21522258 | Nguyễn Trần Gia Kiệt | https://github.com/KietGia22 | 21522258@gm.uit.edu.vn |
 | 4   | 21521546 | Nguyễn Gia Toàn      | https://github.com/aaa       | 21521546@gm.uit.edu.vn |
+
+## NẾU BẠN THẤY REPO NÀY HAY HÃY CHO NHÓM CHÚNG MÌNH 1 SAO NHÉ ⭐

@@ -34,10 +34,13 @@
 
 ## Cách chạy repo này
 -  Clone repo này về
+
 -  Sau đó, chạy
 ```
     composer install
 ```
+-  Tạo file .env, cấu hình database, email chính
+  
 -  Cuối cùng
 ```
     php artisan:serve

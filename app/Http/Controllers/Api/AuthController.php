@@ -73,7 +73,7 @@ class AuthController extends Controller
         $randomId = 'User'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 3);
 
         $user = User::create([
-            'user_id' => $randomId,
+            'user_id' => $req->user_id,
             'name' => $req->name,
             'email' => $req->email,
             'phone' => $req->phone,

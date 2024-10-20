@@ -26,12 +26,11 @@ class OrderController extends Controller
             return response()->json("Not found user", 404);
 
         try {
-            $randomId = 'Ord'.substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), 0, 7);
             $now = Carbon::now();
             $now->setTimezone('Asia/Bangkok');
 
             $order = Order::create([
-                'order_id' => $randomId,
+                'order_id' => $req->order_id,
                 'user_id' => $req->user_id,
                 'create_order_at' => $now,
                 'name' => $req->name,
@@ -67,7 +66,7 @@ class OrderController extends Controller
 
                 //Thêm vào detail_order
                 $detail_order = DetailOrder::make([
-                    'order_id' => $randomId,
+                    'order_id' => $req->order_id,
                     'product_id' => $item->product_id,
                     'price_pr' => $product->price,
                     'quantity_pr' => $item->quantity,
@@ -134,7 +133,7 @@ class OrderController extends Controller
 
         Excel::store($export, $fileName, 'local');
 
-        return Excel::download($export, 'example.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        return Excel::download($export      , 'example.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
 
     }

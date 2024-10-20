@@ -15,6 +15,10 @@ class UserController extends Controller
         return response()->json($user, 200);
     }
 
+    public function getById($id){
+        $user = User::where('user_id','=',$id)->first();
+        return response()->json($user,200);
+    }
    public function update(Request $request, $id)
     {
         // if (!$this->userHasPermissionToUpdate($request->user_id)) {
